@@ -33,28 +33,61 @@
 </footer>
 
 <script>
+  /** @type {number} */
   var fireballSize = 22;
+
+  /** @type {?number} */
   var wizardSpeed = 3;
+
+  /** @type {number} */
   var wizardWidth = 70;
 
-  var FIREBALL_SPEED_DOWNWIND = 5;
-  var FIREBALL_SPEED_UPWIND = 3;
-  var WIZARD_HEIGHT_MODIFIER = 1.337;
-
-  var getFireballSpeed = function(left) {
-    return left ? FIREBALL_SPEED_DOWNWIND : FIREBALL_SPEED_UPWIND;
+  /** @enum {number} */
+  var fireballSpeed = {
+    DOWNWIND: 5,
+    UPWIND: 3
   };
 
+  /** @const {number} */
+  var WIZARD_HEIGHT_MODIFIER = 1.337;
+
+  /**
+   * Returns Fireball speed.
+   * @function
+   * @param {boolean} left
+   * @return {number}
+   */
+  var getFireballSpeed = function(left) {
+    return left ? fireballSpeed.DOWNWIND : fireballSpeed.UPWIND;
+  };
+
+  /**
+   * Returns Wizard height.
+   * @function
+   * @return {number}
+   */
   var getWizardHeight = function() {
     return wizardWidth * WIZARD_HEIGHT_MODIFIER;
   };
 
+  /**
+   * Returns X coordinate of Wizard.
+   * @function
+   * @param {number} width of screen
+   * @return {number}
+   */
   var getWizardX = function(width) {
-    return (width / 2) - (wizardWidth / 2);
+    return (width - wizardWidth) / 2;
   };
 
+  /**
+   * Returns Y coordinate of Wizard.
+   * @function
+   * @param {number} height of screen
+   * @return {number}
+   */
   var getWizardY = function(height) {
-    return (height / 3 * 2) - (getWizardHeight() / 2);
+    return height / 3 * 2;
   };
 </script>
 <script src="js/game.js" type="application/javascript"></script>
