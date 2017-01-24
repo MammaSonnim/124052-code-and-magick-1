@@ -3,10 +3,10 @@
 window.renderStatistics = function(ctx, names, times) {
 
   /**
-   * Параметры для отрисовки статистики.
+   *  Конфиг для отрисовки статистики.
    * @enum
    */
-  var statCloud = {
+  var statCloudConfig = {
     Polygon: {
       START_X: 100,
       START_Y: 10,
@@ -16,7 +16,7 @@ window.renderStatistics = function(ctx, names, times) {
       SHIFT: 10,
       COLOR: '#ffffff',
       SHADOW_COLOR: 'rgba(0, 0, 0, 0.7)',
-      PADDING: 30,
+      PADDING: 40
     },
     Text: {
       MESSAGE: 'Ура вы победили!\nСписок результатов:',
@@ -25,6 +25,14 @@ window.renderStatistics = function(ctx, names, times) {
       FONT_STYLE: '16px PT Mono',
       BASE_LINE: 'hanging',
       LINE_HEIGHT: 20
+    },
+    Histogram: {
+      HEIGHT: 150,
+      COL_WIDTH: 40,
+      COL_INDENT: 50,
+      MY_NAME: 'Вы',
+      MY_COLOR: 'rgba(255, 0, 0, 1)',
+      BASE_COLOR: 'rgba(0, 0, 255, 1)'
     }
   };
 
@@ -33,31 +41,40 @@ window.renderStatistics = function(ctx, names, times) {
    */
   function getAllStatElements() {
     _drawPolygon(
-      statCloud.Polygon.START_X + statCloud.Polygon.SHIFT,
-      statCloud.Polygon.START_Y + statCloud.Polygon.SHIFT,
-      statCloud.Polygon.WIDTH,
-      statCloud.Polygon.HEIGHT,
-      statCloud.Polygon.SKEW,
-      statCloud.Polygon.SHADOW_COLOR
+      statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.SHIFT,
+      statCloudConfig.Polygon.START_Y + statCloudConfig.Polygon.SHIFT,
+      statCloudConfig.Polygon.WIDTH,
+      statCloudConfig.Polygon.HEIGHT,
+      statCloudConfig.Polygon.SKEW,
+      statCloudConfig.Polygon.SHADOW_COLOR
     );
 
     _drawPolygon(
-      statCloud.Polygon.START_X,
-      statCloud.Polygon.START_Y,
-      statCloud.Polygon.WIDTH,
-      statCloud.Polygon.HEIGHT,
-      statCloud.Polygon.SKEW,
-      statCloud.Polygon.COLOR
+      statCloudConfig.Polygon.START_X,
+      statCloudConfig.Polygon.START_Y,
+      statCloudConfig.Polygon.WIDTH,
+      statCloudConfig.Polygon.HEIGHT,
+      statCloudConfig.Polygon.SKEW,
+      statCloudConfig.Polygon.COLOR
     );
 
-    _drawText(
-      statCloud.Polygon.START_X + statCloud.Polygon.PADDING,
-      statCloud.Polygon.START_Y + statCloud.Polygon.PADDING,
-      statCloud.Text.MESSAGE,
-      statCloud.Text.COLOR,
-      statCloud.Text.FONT_STYLE,
-      statCloud.Text.LINE_HEIGHT,
-      statCloud.Text.BASE_LINE
+    _drawMultiLineText(
+      statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.PADDING,
+      statCloudConfig.Polygon.START_Y + statCloudConfig.Polygon.PADDING,
+      statCloudConfig.Text.MESSAGE,
+      statCloudConfig.Text.COLOR,
+      statCloudConfig.Text.FONT_STYLE,
+      statCloudConfig.Text.LINE_HEIGHT,
+      statCloudConfig.Text.BASE_LINE
+    );
+
+    _drawHistogram(
+      statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.PADDING,
+      statCloudConfig.Polygon.START_Y,
+      statCloudConfig.Histogram.HEIGHT,
+      statCloudConfig.Histogram.COL_WIDTH,
+      statCloudConfig.Histogram.COL_INDENT,
+      _getHistogramStep(statCloudConfig.Histogram.HEIGHT)
     );
   }
 
@@ -85,7 +102,7 @@ window.renderStatistics = function(ctx, names, times) {
   /**
    * Отрисовка текста.
    */
-  function _drawText(x, y, message, color, font, lineHeight, baseline) {
+  function _drawMultiLineText(x, y, message, color, font, lineHeight, baseline) {
     ctx.fillStyle = color;
     ctx.font = font;
     ctx.baseline = baseline;
@@ -98,7 +115,41 @@ window.renderStatistics = function(ctx, names, times) {
   /**
    * Отрисовка гистограммы.
    */
-  function _drawHistogram() {
+  function _drawHistogram(x, y, height, colWidth, colIndent, colStep) {
+    var histogramStep = colStep;
+    var colWithIndent = (colWidth + colIndent);
 
+    for (var i = 0; i < times.length; i++) {
+      var name = names[i];
+      var time = times[i];
+      var colHeight = histogramStep * time;
+      var colX = x + colWithIndent * i;
+
+      ctx.fillRect(colX, y, colWidth, colHeight);
+
+      if (names[i] === statCloudConfig.Histogram.MY_NAME) {
+        ctx.fillStyle = statCloudConfig.Histogram.MY_COLOR;
+      } else {
+        ctx.fillStyle = _getHistogramColor();
+      }
+
+      ctx.fillText(name + ':' + time.toFixed(0), colX, y + height);
+    }
+  }
+
+  function _getHistogramStep(height) {
+    var max = -1;
+
+    for(var i = 0 ; i < times.length; i++ ) {
+      var time = times[i];
+      if (time > max) {
+        max = time;
+      }
+    }
+    return height / max;
+  }
+
+  function _getHistogramColor() {
+    return 'rgba(0, 0, 255, ' + Math.random() +  ')'
   }
 };
