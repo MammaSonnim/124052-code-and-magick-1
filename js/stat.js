@@ -8,16 +8,18 @@ window.renderStatistics = function(ctx, names, times) {
    */
   var statCloud = {
     Polygon: {
-      WIDTH: 350,
+      START_X: 100,
+      START_Y: 10,
+      WIDTH: 420,
+      HEIGHT: 270,
       SKEW: 10,
       SHIFT: 10,
       COLOR: '#ffffff',
       SHADOW_COLOR: 'rgba(0, 0, 0, 0.7)',
-      PADDING: 20,
-      POS_X: 50,
-      POS_Y: 0
+      PADDING: 30,
     },
     Text: {
+      MESSAGE: 'Ура вы победили!\nСписок результатов:',
       WIDTH: 175,
       COLOR: '#000000',
       FONT_STYLE: '16px PT Mono',
@@ -30,25 +32,33 @@ window.renderStatistics = function(ctx, names, times) {
    * Сборка всех частей облака статистики.
    */
   function getAllStatElements() {
-    var startX = 180;
-    var startY = 30;
-    var rectangleHeight = 100;
+    _drawPolygon(
+      statCloud.Polygon.START_X + statCloud.Polygon.SHIFT,
+      statCloud.Polygon.START_Y + statCloud.Polygon.SHIFT,
+      statCloud.Polygon.WIDTH,
+      statCloud.Polygon.HEIGHT,
+      statCloud.Polygon.SKEW,
+      statCloud.Polygon.SHADOW_COLOR
+    );
 
     _drawPolygon(
-      startX + statCloud.Polygon.SHIFT,
-      startY + statCloud.Polygon.SHIFT,
+      statCloud.Polygon.START_X,
+      statCloud.Polygon.START_Y,
       statCloud.Polygon.WIDTH,
-      rectangleHeight,
+      statCloud.Polygon.HEIGHT,
       statCloud.Polygon.SKEW,
-      statCloud.Polygon.SHADOW_COLOR);
+      statCloud.Polygon.COLOR
+    );
 
-    _drawPolygon(
-      startX,
-      startY,
-      statCloud.Polygon.WIDTH,
-      rectangleHeight,
-      statCloud.Polygon.SKEW,
-      statCloud.Polygon.COLOR);
+    _drawText(
+      statCloud.Polygon.START_X + statCloud.Polygon.PADDING,
+      statCloud.Polygon.START_Y + statCloud.Polygon.PADDING,
+      statCloud.Text.MESSAGE,
+      statCloud.Text.COLOR,
+      statCloud.Text.FONT_STYLE,
+      statCloud.Text.LINE_HEIGHT,
+      statCloud.Text.BASE_LINE
+    );
   }
 
   getAllStatElements();
@@ -70,6 +80,19 @@ window.renderStatistics = function(ctx, names, times) {
     ctx.stroke();
     ctx.closePath();
     ctx.fill();
+  }
+
+  /**
+   * Отрисовка текста.
+   */
+  function _drawText(x, y, message, color, font, lineHeight, baseline) {
+    ctx.fillStyle = color;
+    ctx.font = font;
+    ctx.baseline = baseline;
+
+    message.split('\n').forEach(function (line, i) {
+      ctx.fillText(line, x, y + lineHeight * i);
+    });
   }
 
   /**
