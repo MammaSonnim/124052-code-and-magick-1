@@ -19,7 +19,8 @@ window.renderStatistics = function(ctx, names, times) {
       PADDING: 40
     },
     Text: {
-      MESSAGE: 'Ура вы победили!\nСписок результатов:',
+      GLORY_MESSAGE: 'Ура вы победили!\nСписок результатов:',
+      FAILURE_MESSAGE: 'Вы проиграли!\nСписок результатов:',
       WIDTH: 175,
       COLOR: '#000000',
       FONT_STYLE: '16px PT Mono',
@@ -61,11 +62,13 @@ window.renderStatistics = function(ctx, names, times) {
     _drawMultiLineText(
       statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.PADDING,
       statCloudConfig.Polygon.START_Y + statCloudConfig.Polygon.PADDING,
-      statCloudConfig.Text.MESSAGE,
+      statCloudConfig.Text.GLORY_MESSAGE,
+      statCloudConfig.Text.FAILURE_MESSAGE,
       statCloudConfig.Text.COLOR,
       statCloudConfig.Text.FONT_STYLE,
       statCloudConfig.Text.LINE_HEIGHT,
-      statCloudConfig.Text.BASE_LINE
+      statCloudConfig.Text.BASE_LINE,
+      statCloudConfig.Histogram.MY_NAME
     );
 
     _drawHistogram(
@@ -102,10 +105,12 @@ window.renderStatistics = function(ctx, names, times) {
   /**
    * Отрисовка текста.
    */
-  function _drawMultiLineText(x, y, message, color, font, lineHeight, baseline) {
+  function _drawMultiLineText(x, y, gloryMessage, failureMessage, color, font, lineHeight, baseline, name) {
     ctx.fillStyle = color;
     ctx.font = font;
     ctx.baseline = baseline;
+
+    var message = _hasUserWon(name) ? gloryMessage : failureMessage;
 
     message.split('\n').forEach(function (line, i) {
       ctx.fillText(line, x, y + lineHeight * i);
@@ -125,19 +130,23 @@ window.renderStatistics = function(ctx, names, times) {
       var colHeight = histogramStep * time;
       var colX = x + colWithIndent * i;
 
-      ctx.fillRect(colX, y, colWidth, colHeight);
-
       if (names[i] === statCloudConfig.Histogram.MY_NAME) {
         ctx.fillStyle = statCloudConfig.Histogram.MY_COLOR;
       } else {
         ctx.fillStyle = _getHistogramColor();
       }
 
+      ctx.fillRect(colX, y, colWidth, colHeight);
+
       ctx.fillText(name + ':' + time.toFixed(0), colX, y + height);
     }
   }
 
-  function _getHistogramStep(height) {
+  function _hasUserWon(name) {
+    return times.indexOf(_getMaxResult()) === names.indexOf(name);
+  }
+
+  function _getMaxResult() {
     var max = -1;
 
     for(var i = 0 ; i < times.length; i++ ) {
@@ -146,10 +155,21 @@ window.renderStatistics = function(ctx, names, times) {
         max = time;
       }
     }
+    return max;
+  }
+
+  function _getHistogramStep(height) {
+    var max = _getMaxResult();
     return height / max;
   }
 
   function _getHistogramColor() {
-    return 'rgba(0, 0, 255, ' + Math.random() +  ')'
+    var opacity = Math.random();
+
+    if (opacity < 0.5 || opacity > 1) {
+      return _getHistogramColor();
+    } else {
+      return 'rgba(0, 0, 255, ' + opacity +  ')'
+    }
   }
 };
