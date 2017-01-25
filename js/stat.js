@@ -1,7 +1,6 @@
 'use strict';
 
-window.renderStatistics = function(ctx, names, times) {
-
+window.renderStatistics = function (ctx, names, times) {
   /**
    * Конфиг для отрисовки статистики.
    * @enum
@@ -45,48 +44,48 @@ window.renderStatistics = function(ctx, names, times) {
    */
   function getAllStatElements() {
     _drawPolygon(
-      statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.SHIFT,
-      statCloudConfig.Polygon.START_Y + statCloudConfig.Polygon.SHIFT,
-      statCloudConfig.Polygon.WIDTH,
-      statCloudConfig.Polygon.HEIGHT,
-      statCloudConfig.Polygon.SKEW,
-      statCloudConfig.Polygon.SHADOW_COLOR
+        statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.SHIFT,
+        statCloudConfig.Polygon.START_Y + statCloudConfig.Polygon.SHIFT,
+        statCloudConfig.Polygon.WIDTH,
+        statCloudConfig.Polygon.HEIGHT,
+        statCloudConfig.Polygon.SKEW,
+        statCloudConfig.Polygon.SHADOW_COLOR
     );
 
     _drawPolygon(
-      statCloudConfig.Polygon.START_X,
-      statCloudConfig.Polygon.START_Y,
-      statCloudConfig.Polygon.WIDTH,
-      statCloudConfig.Polygon.HEIGHT,
-      statCloudConfig.Polygon.SKEW,
-      statCloudConfig.Polygon.COLOR
+        statCloudConfig.Polygon.START_X,
+        statCloudConfig.Polygon.START_Y,
+        statCloudConfig.Polygon.WIDTH,
+        statCloudConfig.Polygon.HEIGHT,
+        statCloudConfig.Polygon.SKEW,
+        statCloudConfig.Polygon.COLOR
     );
 
     _drawVerdictText(
-      statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.PADDING,
-      statCloudConfig.Polygon.START_Y + statCloudConfig.Polygon.PADDING,
-      statCloudConfig.Text.GLORY_MESSAGE,
-      statCloudConfig.Text.FAILURE_MESSAGE,
-      statCloudConfig.Text.COLOR,
-      statCloudConfig.Text.FONT_STYLE,
-      statCloudConfig.Text.LINE_HEIGHT,
-      statCloudConfig.Text.BASE_LINE,
-      statCloudConfig.Histogram.MY_NAME
+        statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.PADDING,
+        statCloudConfig.Polygon.START_Y + statCloudConfig.Polygon.PADDING,
+        statCloudConfig.Text.GLORY_MESSAGE,
+        statCloudConfig.Text.FAILURE_MESSAGE,
+        statCloudConfig.Text.COLOR,
+        statCloudConfig.Text.FONT_STYLE,
+        statCloudConfig.Text.LINE_HEIGHT,
+        statCloudConfig.Text.BASE_LINE,
+        statCloudConfig.Histogram.MY_NAME
     );
 
     _drawHistogram(
-      statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.PADDING,
-      statCloudConfig.Polygon.START_Y,
-      statCloudConfig.Histogram.HEIGHT,
-      statCloudConfig.Histogram.COL_WIDTH,
-      statCloudConfig.Histogram.COL_INDENT,
-      _getHistogramStep(statCloudConfig.Histogram.HEIGHT),
-      statCloudConfig.Histogram.TEXT_COLOR,
-      statCloudConfig.Histogram.BASE_COLOR,
-      statCloudConfig.Histogram.MY_COLOR,
-      statCloudConfig.Histogram.POS_Y,
-      statCloudConfig.Histogram.SHIFT,
-      statCloudConfig.Histogram.MY_NAME
+        statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.PADDING,
+        statCloudConfig.Polygon.START_Y,
+        statCloudConfig.Histogram.HEIGHT,
+        statCloudConfig.Histogram.COL_WIDTH,
+        statCloudConfig.Histogram.COL_INDENT,
+        _getHistogramStep(statCloudConfig.Histogram.HEIGHT),
+        statCloudConfig.Histogram.TEXT_COLOR,
+        statCloudConfig.Histogram.BASE_COLOR,
+        statCloudConfig.Histogram.MY_COLOR,
+        statCloudConfig.Histogram.POS_Y,
+        statCloudConfig.Histogram.SHIFT,
+        statCloudConfig.Histogram.MY_NAME
     );
   }
 
@@ -205,7 +204,7 @@ window.renderStatistics = function(ctx, names, times) {
     if (opacity < 0.5 || opacity > 1) {
       return _getHistogramColor();
     } else {
-      return color + opacity +  ')'
+      return color + opacity + ')';
     }
   }
 
@@ -215,7 +214,7 @@ window.renderStatistics = function(ctx, names, times) {
   function _getMaxResult() {
     var max = -1;
 
-    for(var i = 0 ; i < times.length; i++ ) {
+    for (var i = 0; i < times.length; i++) {
       var time = times[i];
       if (time > max) {
         max = time;
