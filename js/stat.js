@@ -39,7 +39,7 @@ window.renderStatistics = function (ctx, names, times) {
   };
 
   var length = names.length;
-  var results = _getUsers(names, times);
+  var results = _getUsers();
 
   /**
    * Сборка данных пользователей в один массив
