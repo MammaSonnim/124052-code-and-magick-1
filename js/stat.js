@@ -3,101 +3,79 @@
 window.renderStatistics = function (ctx, names, times) {
   /**
    * Конфиг для отрисовки статистики.
-   * @enum
    */
-  var statCloudConfig = {
-    Polygon: {
-      START_X: 100,
-      START_Y: 10,
-      WIDTH: 420,
-      HEIGHT: 270,
-      SKEW: 5,
-      SHIFT: 10,
-      COLOR: '#ffffff',
-      SHADOW_COLOR: 'rgba(0, 0, 0, 0.7)',
-      PADDING: 40
-    },
-    Text: {
-      GLORY_MESSAGE: 'Ура вы победили!\nСписок результатов:',
-      FAILURE_MESSAGE: 'Вы проиграли!\nСписок результатов:',
-      WIDTH: 175,
-      COLOR: '#000000',
-      FONT_STYLE: '16px PT Mono',
-      BASE_LINE: 'hanging',
-      LINE_HEIGHT: 20
-    },
-    Histogram: {
-      HEIGHT: 150,
-      COL_WIDTH: 40,
-      COL_INDENT: 50,
-      MY_NAME: 'Вы',
-      MY_COLOR: 'rgba(255, 0, 0, 1)',
-      BASE_COLOR: 'rgba(0, 0, 255, ',
-      TEXT_COLOR: 'rgba(0, 0, 0, 0.7)',
-      POS_Y: 100,
-      SHIFT: 10
-    }
+  var polygonConfig = {
+    START_X: 100,
+    START_Y: 10,
+    WIDTH: 420,
+    HEIGHT: 270,
+    SKEW: 5,
+    SHIFT: 10,
+    COLOR: '#ffffff',
+    SHADOW_COLOR: 'rgba(0, 0, 0, 0.7)',
+    PADDING: 40
   };
 
+  var textConfig = {
+    GLORY_MESSAGE: 'Ура вы победили!\nСписок результатов:',
+    FAILURE_MESSAGE: 'Вы проиграли!\nПобедитель – ',
+    WIDTH: 175,
+    COLOR: '#000000',
+    FONT_STYLE: '16px PT Mono',
+    BASE_LINE: 'hanging',
+    LINE_HEIGHT: 20
+  };
+
+  var histogramConfig = {
+    HEIGHT: 150,
+    COL_WIDTH: 40,
+    COL_INDENT: 50,
+    MY_NAME: 'Вы',
+    MY_COLOR: 'rgba(255, 0, 0, 1)',
+    BASE_COLOR: 'rgba(0, 0, 255, ',
+    TEXT_COLOR: 'rgba(0, 0, 0, 0.7)',
+    POS_Y: 100,
+    SHIFT: 10
+  };
+
+  var length = names.length;
+  var results = _getUsers(names, times);
+
   /**
-   * Сборка всех частей облака статистики.
+   * Сборка данных пользователей в один массив
+   * @return {Array.<Object>} usersArray
    */
-  function getAllStatElements() {
-    _drawPolygon(
-        statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.SHIFT,
-        statCloudConfig.Polygon.START_Y + statCloudConfig.Polygon.SHIFT,
-        statCloudConfig.Polygon.WIDTH,
-        statCloudConfig.Polygon.HEIGHT,
-        statCloudConfig.Polygon.SKEW,
-        statCloudConfig.Polygon.SHADOW_COLOR
-    );
+  function _getUsers() {
+    var usersArray = [];
+    var winner = null;
+    var maxTime = -1;
 
-    _drawPolygon(
-        statCloudConfig.Polygon.START_X,
-        statCloudConfig.Polygon.START_Y,
-        statCloudConfig.Polygon.WIDTH,
-        statCloudConfig.Polygon.HEIGHT,
-        statCloudConfig.Polygon.SKEW,
-        statCloudConfig.Polygon.COLOR
-    );
+    for (var i = 0; i < length; i++) {
+      var time = times[i];
+      var user = {
+        name: names[i],
+        time: time
+      };
 
-    _drawVerdictText(
-        statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.PADDING,
-        statCloudConfig.Polygon.START_Y + statCloudConfig.Polygon.PADDING,
-        statCloudConfig.Text.GLORY_MESSAGE,
-        statCloudConfig.Text.FAILURE_MESSAGE,
-        statCloudConfig.Text.COLOR,
-        statCloudConfig.Text.FONT_STYLE,
-        statCloudConfig.Text.LINE_HEIGHT,
-        statCloudConfig.Text.BASE_LINE,
-        statCloudConfig.Histogram.MY_NAME
-    );
+      if (time > maxTime) {
+        winner = user;
+        maxTime = time;
+      }
 
-    _drawHistogram(
-        statCloudConfig.Polygon.START_X + statCloudConfig.Polygon.PADDING,
-        statCloudConfig.Polygon.START_Y,
-        statCloudConfig.Histogram.HEIGHT,
-        statCloudConfig.Histogram.COL_WIDTH,
-        statCloudConfig.Histogram.COL_INDENT,
-        _getHistogramStep(statCloudConfig.Histogram.HEIGHT),
-        statCloudConfig.Histogram.TEXT_COLOR,
-        statCloudConfig.Histogram.BASE_COLOR,
-        statCloudConfig.Histogram.MY_COLOR,
-        statCloudConfig.Histogram.POS_Y,
-        statCloudConfig.Histogram.SHIFT,
-        statCloudConfig.Histogram.MY_NAME
-    );
+      usersArray.push(user);
+    }
+    winner.isWinner = true;
+
+    return usersArray;
   }
-
-  getAllStatElements();
 
   /**
    * @param {number} x координата левого верхнего угла
    * @param {number} y координата левого верхнего угла
-   * @param {number} width ширина многоуголника
-   * @param {number} height высота многоуголника
-   * @param {?number} skew скос
-   * @param {string} color цвет многоуголника
+   * @param {number} width
+   * @param {number} height
+   * @param {number} skew
+   * @param {string} color
    */
   function _drawPolygon(x, y, width, height, skew, color) {
     ctx.fillStyle = color;
@@ -122,19 +100,26 @@ window.renderStatistics = function (ctx, names, times) {
    * @param {string} failureMessage текст, когда пользователь проиграл
    * @param {string} color цвет шрифта
    * @param {string} font стиль шрифта
-   * @param {number} lineHeight высота строки
-   * @param {string} baseline режим базовой линии
-   * @param {string} name имя пользователя
+   * @param {number} lineHeight
+   * @param {string} baseline
+   * @param {string} myName имя пользователя
    */
-  function _drawVerdictText(x, y, gloryMessage, failureMessage, color, font, lineHeight, baseline, name) {
+  function _drawVerdictText(x, y, gloryMessage, failureMessage, color, font, lineHeight, baseline, myName) {
     ctx.fillStyle = color;
     ctx.font = font;
     ctx.baseline = baseline;
 
-    var message = _hasUserWon(name) ? gloryMessage : failureMessage;
+    var message;
 
-    message.split('\n').forEach(function (line, i) {
-      ctx.fillText(line, x, y + lineHeight * i);
+    for (var i = 0; i < length; i++) {
+      if (results[i].isWinner) {
+        message = results[i].name === myName ?
+          gloryMessage : failureMessage + results[i].name + '!';
+      }
+    }
+
+    message.split('\n').forEach(function (line, n) {
+      ctx.fillText(line, x, y + lineHeight * n);
     });
   }
 
@@ -142,10 +127,10 @@ window.renderStatistics = function (ctx, names, times) {
    * @param {number} x координата левого верхнего угла
    * @param {number} y координата левого верхнего угла
    * @param {number} height максимальная высота колонки
-   * @param {number} colWidth ширина колонки
-   * @param {number} colIndent расстояние между колонками
+   * @param {number} colWidth
+   * @param {number} colIndent
    * @param {number} colStep шаг роста высоты колонки
-   * @param {string} textColor цвет шрифта
+   * @param {string} textColor
    * @param {string} colBaseColor базовый цвет для расчета цвета колонок других игроков
    * @param {string} colMyColor цвет колонки пользователя
    * @param {number} posY сдвиг позиционирования всех элементов гистограммы
@@ -156,9 +141,9 @@ window.renderStatistics = function (ctx, names, times) {
     var histogramStep = colStep;
     var colWithIndent = (colWidth + colIndent);
 
-    for (var i = 0; i < times.length; i++) {
-      var name = names[i];
-      var time = times[i];
+    for (var i = 0; i < results.length; i++) {
+      var name = results[i].name;
+      var time = results[i].time;
       var colHeight = histogramStep * time;
       var colX = x + colWithIndent * i;
 
@@ -167,7 +152,7 @@ window.renderStatistics = function (ctx, names, times) {
       ctx.fillText(time.toFixed(0), colX, height - colHeight - shift + posY);
       ctx.fillText(name, colX, y + height + shift + posY);
 
-      if (names[i] === myName) {
+      if (results[i].name === myName) {
         ctx.fillStyle = colMyColor;
       } else {
         ctx.fillStyle = _getHistogramColor(colBaseColor);
@@ -175,14 +160,6 @@ window.renderStatistics = function (ctx, names, times) {
 
       ctx.fillRect(colX, height - colHeight + posY, colWidth, colHeight);
     }
-  }
-
-  /**
-   * @param {string} name имя пользователя
-   * @return {boolean}
-   */
-  function _hasUserWon(name) {
-    return times.indexOf(_getMaxResult()) === names.indexOf(name);
   }
 
   /**
@@ -199,13 +176,9 @@ window.renderStatistics = function (ctx, names, times) {
    * @return {string}
    */
   function _getHistogramColor(color) {
-    var opacity = Math.random();
+    var opacity = Math.random() * 0.4 + 0.5;
 
-    if (opacity < 0.5 || opacity > 1) {
-      return _getHistogramColor();
-    } else {
-      return color + opacity + ')';
-    }
+    return color + opacity + ')';
   }
 
   /**
@@ -214,12 +187,59 @@ window.renderStatistics = function (ctx, names, times) {
   function _getMaxResult() {
     var max = -1;
 
-    for (var i = 0; i < times.length; i++) {
-      var time = times[i];
+    for (var i = 0; i < results.length; i++) {
+      var time = results[i].time;
       if (time > max) {
         max = time;
       }
     }
     return max;
   }
+
+
+  _drawPolygon(
+      polygonConfig.START_X + polygonConfig.SHIFT,
+      polygonConfig.START_Y + polygonConfig.SHIFT,
+      polygonConfig.WIDTH,
+      polygonConfig.HEIGHT,
+      polygonConfig.SKEW,
+      polygonConfig.SHADOW_COLOR
+  );
+
+  _drawPolygon(
+      polygonConfig.START_X,
+      polygonConfig.START_Y,
+      polygonConfig.WIDTH,
+      polygonConfig.HEIGHT,
+      polygonConfig.SKEW,
+      polygonConfig.COLOR
+  );
+
+  _drawVerdictText(
+      polygonConfig.START_X + polygonConfig.PADDING,
+      polygonConfig.START_Y + polygonConfig.PADDING,
+      textConfig.GLORY_MESSAGE,
+      textConfig.FAILURE_MESSAGE,
+      textConfig.COLOR,
+      textConfig.FONT_STYLE,
+      textConfig.LINE_HEIGHT,
+      textConfig.BASE_LINE,
+      histogramConfig.MY_NAME
+  );
+
+  _drawHistogram(
+      polygonConfig.START_X + polygonConfig.PADDING,
+      polygonConfig.START_Y,
+      histogramConfig.HEIGHT,
+      histogramConfig.COL_WIDTH,
+      histogramConfig.COL_INDENT,
+      _getHistogramStep(histogramConfig.HEIGHT),
+      histogramConfig.TEXT_COLOR,
+      histogramConfig.BASE_COLOR,
+      histogramConfig.MY_COLOR,
+      histogramConfig.POS_Y,
+      histogramConfig.SHIFT,
+      histogramConfig.MY_NAME
+  );
 };
+
