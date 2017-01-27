@@ -38,7 +38,6 @@ window.renderStatistics = function (ctx, names, times) {
     SHIFT: 10
   };
 
-  var length = names.length;
   var results = _getUsers();
 
   /**
@@ -50,7 +49,7 @@ window.renderStatistics = function (ctx, names, times) {
     var winner = null;
     var maxTime = -1;
 
-    for (var i = 0; i < length; i++) {
+    for (var i = 0; i < names.length; i++) {
       var time = times[i];
       var user = {
         name: names[i],
@@ -109,12 +108,13 @@ window.renderStatistics = function (ctx, names, times) {
     ctx.font = font;
     ctx.baseline = baseline;
 
-    var message;
+    var message = '';
 
-    for (var i = 0; i < length; i++) {
+    for (var i = 0; i < results.length; i++) {
       if (results[i].isWinner) {
         message = results[i].name === myName ?
           gloryMessage : failureMessage + results[i].name + '!';
+        break;
       }
     }
 
