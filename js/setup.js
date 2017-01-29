@@ -9,7 +9,6 @@ var wizard = setupForm.querySelector('#wizard');
 var wizardCoat = wizard.querySelector('#wizard-coat');
 var wizardEyes = wizard.querySelector('#wizard-eyes');
 var fireball = setupForm.querySelector('.setup-fireball-wrap');
-var clickHandler;
 
 var colors = {
   WIZARD_COAT: [
@@ -36,14 +35,25 @@ var colors = {
   ]
 };
 
+// wizard click handlers
+var wizardCoatClickHandler = function(event) {
+  event.currentTarget.style.fill = getRandomElement(colors.WIZARD_COAT);
+};
+var wizardEyesClickHandler = function(event) {
+  event.currentTarget.style.fill = getRandomElement(colors.WIZARD_EYES);
+};
+var fireballClickHandler = function(event) {
+  event.currentTarget.style.background = getRandomElement(colors.FIREBALL);
+};
+
 function open() {
   setup.classList.remove('invisible');
   setupUserName.required = true;
   setupUserName.maxlength = 50;
 
-  addClickHandler(wizardCoat, colors.WIZARD_COAT, 'fill');
-  addClickHandler(wizardEyes, colors.WIZARD_EYES, 'fill');
-  addClickHandler(fireball, colors.FIREBALL, 'background');
+  wizardCoat.addEventListener('click', wizardCoatClickHandler);
+  wizardEyes.addEventListener('click', wizardEyesClickHandler);
+  fireball.addEventListener('click', fireballClickHandler);
 }
 
 function close() {
@@ -51,25 +61,13 @@ function close() {
   setupUserName.required = false;
   setupUserName.maxlength = false;
 
-  removeClickHandlers([wizardCoat, wizardEyes, fireball]);
+  wizardCoat.removeEventListener('click', wizardCoatClickHandler);
+  wizardEyes.removeEventListener('click', wizardEyesClickHandler);
+  fireball.removeEventListener('click', fireballClickHandler);
 }
 
 function getRandomElement(array) {
   return array[Math.floor(Math.random() * array.length)]
-}
-
-function addClickHandler(target, colors, method) {
-  clickHandler = function(event) {
-    event.currentTarget.style[method] = getRandomElement(colors);
-  };
-
-  target.addEventListener('click', clickHandler);
-}
-
-function removeClickHandlers(targets) {
-  targets.forEach(function(el, i, arr) {
-    el.removeEventListener('click', clickHandler);
-  })
 }
 
 setupOpenBtn.addEventListener('click', open);
