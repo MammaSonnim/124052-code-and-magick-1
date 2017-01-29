@@ -36,13 +36,13 @@ var colors = {
 };
 
 // wizard click handlers
-var wizardCoatClickHandler = function(event) {
+var wizardCoatClickHandler = function (event) {
   event.currentTarget.style.fill = getRandomElement(colors.WIZARD_COAT);
 };
-var wizardEyesClickHandler = function(event) {
+var wizardEyesClickHandler = function (event) {
   event.currentTarget.style.fill = getRandomElement(colors.WIZARD_EYES);
 };
-var fireballClickHandler = function(event) {
+var fireballClickHandler = function (event) {
   event.currentTarget.style.background = getRandomElement(colors.FIREBALL);
 };
 
@@ -67,13 +67,8 @@ function close() {
 }
 
 function getRandomElement(array) {
-  return array[Math.floor(Math.random() * array.length)]
+  return array[Math.floor(Math.random() * array.length)];
 }
 
 setupOpenBtn.addEventListener('click', open);
 setupCloseBtn.addEventListener('click', close);
-
-
-
-
-
