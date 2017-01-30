@@ -9,6 +9,7 @@ var wizard = setupForm.querySelector('#wizard');
 var wizardCoat = wizard.querySelector('#wizard-coat');
 var wizardEyes = wizard.querySelector('#wizard-eyes');
 var fireball = setupForm.querySelector('.setup-fireball-wrap');
+var CSS_CLASS_INVISIBLE = 'invisible';
 
 var colors = {
   WIZARD_COAT: [
@@ -47,7 +48,7 @@ var fireballClickHandler = function (event) {
 };
 
 function open() {
-  setup.classList.remove('invisible');
+  setup.classList.remove(CSS_CLASS_INVISIBLE);
   setupUserName.required = true;
   setupUserName.maxlength = 50;
 
@@ -57,7 +58,7 @@ function open() {
 }
 
 function close() {
-  setup.classList.add('invisible');
+  setup.classList.add(CSS_CLASS_INVISIBLE);
   setupUserName.required = false;
   setupUserName.maxlength = false;
 
