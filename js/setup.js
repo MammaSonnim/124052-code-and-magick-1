@@ -10,6 +10,9 @@ var wizardCoat = wizard.querySelector('#wizard-coat');
 var wizardEyes = wizard.querySelector('#wizard-eyes');
 var fireball = setupForm.querySelector('.setup-fireball-wrap');
 var CSS_CLASS_INVISIBLE = 'invisible';
+var USER_NAME_MAXLENGTH = '50';
+var ARIA_CURRENT_VALUE_ATTRIBUTE = 'aria-valuenow';
+var ARIA_PRESSED_ATTRIBUTE = 'aria-pressed';
 
 var colors = {
   WIZARD_COAT: [
@@ -38,19 +41,18 @@ var colors = {
 
 // wizard click handlers
 var wizardCoatClickHandler = function (event) {
-  event.currentTarget.style.fill = getRandomElement(colors.WIZARD_COAT);
+  paintElementsWithRandomColor(event, colors.WIZARD_COAT, 'fill');
 };
 var wizardEyesClickHandler = function (event) {
-  event.currentTarget.style.fill = getRandomElement(colors.WIZARD_EYES);
+  paintElementsWithRandomColor(event, colors.WIZARD_EYES, 'fill');
 };
 var fireballClickHandler = function (event) {
-  event.currentTarget.style.background = getRandomElement(colors.FIREBALL);
+  paintElementsWithRandomColor(event, colors.FIREBALL, 'background');
 };
 
+// business logic
 function open() {
-  setup.classList.remove(CSS_CLASS_INVISIBLE);
-  setupUserName.required = true;
-  setupUserName.maxlength = 50;
+  toggleState(true);
 
   wizardCoat.addEventListener('click', wizardCoatClickHandler);
   wizardEyes.addEventListener('click', wizardEyesClickHandler);
@@ -58,13 +60,25 @@ function open() {
 }
 
 function close() {
-  setup.classList.add(CSS_CLASS_INVISIBLE);
-  setupUserName.required = false;
-  setupUserName.maxlength = false;
-
   wizardCoat.removeEventListener('click', wizardCoatClickHandler);
   wizardEyes.removeEventListener('click', wizardEyesClickHandler);
   fireball.removeEventListener('click', fireballClickHandler);
+
+  toggleState(false);
+}
+
+function toggleState(isOpened) {
+  setup.classList.toggle(CSS_CLASS_INVISIBLE);
+  setupUserName.required = isOpened;
+  setupUserName.maxlength = isOpened ? USER_NAME_MAXLENGTH : false;
+  setupOpenBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, isOpened.toString());
+  setupCloseBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, (!isOpened).toString());
+}
+
+function paintElementsWithRandomColor(event, colorArray, paintMethod) {
+  var randomColor = getRandomElement(colorArray);
+  event.currentTarget.style[paintMethod] = randomColor;
+  event.currentTarget.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, randomColor);
 }
 
 function getRandomElement(array) {
