@@ -1,22 +1,54 @@
 'use strict';
 
+/** @type {HTMLElement} */
 var setup = document.querySelector('.setup');
+
+/** @type {HTMLElement} */
 var setupOpenBtn = document.querySelector('.setup-open');
+
+/** @type {HTMLElement} */
 var setupForm = document.querySelector('.setup-wizard-form');
+
+/** @type {HTMLElement} */
 var setupCloseBtn = setupForm.querySelector('.setup-close');
+
+/** @type {HTMLElement} */
 var setupSubmitBtn = setupForm.querySelector('.setup-submit');
+
+/** @type {HTMLElement} */
 var setupUserName = setupForm.querySelector('.setup-user-name');
+
+/** @type {HTMLElement} */
 var wizard = setupForm.querySelector('#wizard');
+
+/** @type {HTMLElement} */
 var wizardCoat = wizard.querySelector('#wizard-coat');
+
+/** @type {HTMLElement} */
 var wizardEyes = wizard.querySelector('#wizard-eyes');
+
+/** @type {HTMLElement} */
 var fireball = setupForm.querySelector('.setup-fireball-wrap');
+
+/** @const {string} */
 var CSS_CLASS_INVISIBLE = 'invisible';
-var USER_NAME_MAXLENGTH = '50';
+
+/** @const {number} */
+var USER_NAME_MAXLENGTH = 50;
+
+/** @const {string} */
 var ARIA_CURRENT_VALUE_ATTRIBUTE = 'aria-valuenow';
+
+/** @const {string} */
 var ARIA_PRESSED_ATTRIBUTE = 'aria-pressed';
+
+/** @const {number} */
 var ENTER_KEY_CODE = 13;
+
+/** @const {number} */
 var ESCAPE_KEY_CODE = 27;
 
+/** Словарь всех цветов. */
 var colors = {
   WIZARD_COAT: [
     'rgb(101, 137, 164)',
@@ -42,30 +74,57 @@ var colors = {
   ]
 };
 
-
-// modal btns event handlers
+/**
+ * @param {event} event
+ * @listens click
+ */
 var setupOpenBtnClickHandler = function (event) {
   open();
 };
+
+/**
+ * @param {event} event
+ * @listens keydown
+ */
 var setupOpenBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     open();
   }
 };
+
+/**
+ * @param {event} event
+ * @listens click
+ */
 var setupCloseBtnClickHandler = function (event) {
   close();
 };
+
+/**
+ * @param {event} event
+ * @listens keydown
+ */
 var setupCloseBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     close();
   }
 };
+
+/**
+ * @param {event} event
+ * @listens keydown
+ */
 var setupSubmitBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     event.preventDefault();
     close();
   }
 };
+
+/**
+ * @param {event} event
+ * @listens keydown
+ */
 var documentKeydownHandler = function (event) {
   if (event.keyCode === ESCAPE_KEY_CODE) {
     close();
@@ -73,20 +132,34 @@ var documentKeydownHandler = function (event) {
 };
 
 // wizard parts event handlers
+/**
+ * @param {event} event
+ * @listens click
+ */
 var wizardCoatClickHandler = function (event) {
-  paintElementsWithRandomColor(event, colors.WIZARD_COAT, 'fill');
+  paintElementWithRandomColor(event.currentTarget, colors.WIZARD_COAT, 'fill');
 };
+
+/**
+ * @param {event} event
+ * @listens click
+ */
 var wizardEyesClickHandler = function (event) {
-  paintElementsWithRandomColor(event, colors.WIZARD_EYES, 'fill');
+  paintElementWithRandomColor(event.currentTarget, colors.WIZARD_EYES, 'fill');
 };
+
+/**
+ * @param {event} event
+ * @listens click
+ */
 var fireballClickHandler = function (event) {
-  paintElementsWithRandomColor(event, colors.FIREBALL, 'background');
+  paintElementWithRandomColor(event.currentTarget, colors.FIREBALL, 'background');
 };
 
 setupOpenBtn.addEventListener('click', setupOpenBtnClickHandler);
 setupOpenBtn.addEventListener('keydown', setupOpenBtnKeydownHandler);
 
-// business logic
+/** Открытие окна настроек мага — переключение состояния и навешивание слушателей событий */
 function open() {
   toggleState(true);
 
@@ -100,6 +173,7 @@ function open() {
   fireball.addEventListener('click', fireballClickHandler);
 }
 
+/** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий*/
 function close() {
   wizardCoat.removeEventListener('click', wizardCoatClickHandler);
   wizardEyes.removeEventListener('click', wizardEyesClickHandler);
@@ -113,6 +187,10 @@ function close() {
   toggleState(false);
 }
 
+/**
+ * Переключает состояние различных аттрибутов в зависимости от флага
+ * @param {boolean} isOpened
+ */
 function toggleState(isOpened) {
   if (isOpened) {
     setup.classList.remove(CSS_CLASS_INVISIBLE);
@@ -120,17 +198,26 @@ function toggleState(isOpened) {
     setup.classList.add(CSS_CLASS_INVISIBLE);
   }
   setupUserName.required = isOpened;
-  setupUserName.maxlength = isOpened ? USER_NAME_MAXLENGTH : false;
+  setupUserName.maxLength = isOpened ? USER_NAME_MAXLENGTH : false;
   setupOpenBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, isOpened.toString());
   setupCloseBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, (!isOpened).toString());
 }
 
-function paintElementsWithRandomColor(event, colorArray, paintMethod) {
+/**
+ * @param {HTMLElement} element
+ * @param {Array.<string>} colorArray
+ * @param {string} paintMethod
+ */
+function paintElementWithRandomColor(element, colorArray, paintMethod) {
   var randomColor = getRandomElement(colorArray);
-  event.currentTarget.style[paintMethod] = randomColor;
-  event.currentTarget.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, randomColor);
+  element.style[paintMethod] = randomColor;
+  element.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, randomColor);
 }
 
+/**
+ * @param {Array.<string>} array
+ * @return {string} случайный элемент из массива
+ */
 function getRandomElement(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
