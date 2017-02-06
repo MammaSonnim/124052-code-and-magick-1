@@ -74,46 +74,26 @@ var colors = {
   ]
 };
 
-/**
- * @param {event} event
- * @listens click
- */
 var setupOpenBtnClickHandler = function (event) {
   open();
 };
 
-/**
- * @param {event} event
- * @listens keydown
- */
 var setupOpenBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     open();
   }
 };
 
-/**
- * @param {event} event
- * @listens click
- */
 var setupCloseBtnClickHandler = function (event) {
   close();
 };
 
-/**
- * @param {event} event
- * @listens keydown
- */
 var setupCloseBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     close();
   }
 };
 
-/**
- * @param {event} event
- * @listens keydown
- */
 var setupSubmitBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     event.preventDefault();
@@ -121,37 +101,20 @@ var setupSubmitBtnKeydownHandler = function (event) {
   }
 };
 
-/**
- * @param {event} event
- * @listens keydown
- */
 var documentKeydownHandler = function (event) {
   if (event.keyCode === ESCAPE_KEY_CODE) {
     close();
   }
 };
 
-// wizard parts event handlers
-/**
- * @param {event} event
- * @listens click
- */
 var wizardCoatClickHandler = function (event) {
   paintElementWithRandomColor(event.currentTarget, colors.WIZARD_COAT, 'fill');
 };
 
-/**
- * @param {event} event
- * @listens click
- */
 var wizardEyesClickHandler = function (event) {
   paintElementWithRandomColor(event.currentTarget, colors.WIZARD_EYES, 'fill');
 };
 
-/**
- * @param {event} event
- * @listens click
- */
 var fireballClickHandler = function (event) {
   paintElementWithRandomColor(event.currentTarget, colors.FIREBALL, 'background');
 };
@@ -173,7 +136,7 @@ function open() {
   fireball.addEventListener('click', fireballClickHandler);
 }
 
-/** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий*/
+/** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий */
 function close() {
   wizardCoat.removeEventListener('click', wizardCoatClickHandler);
   wizardEyes.removeEventListener('click', wizardEyesClickHandler);
