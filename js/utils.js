@@ -11,11 +11,14 @@ window.utils = {
   /**
    * @param {Array<string>} array
    * @param {string} item элемент массива
-   * @return случайный неповторяющийся подряд элемент из массива
+   * @return {string} newItem случайный неповторяющийся подряд элемент из массива
    */
   getRandomElementExcept: function (array, item) {
+    /** @type {string} */
     var currentItem = item;
-    var newItem = null;
+
+    /** @type {string} */
+    var newItem = '';
 
     while (!newItem || newItem === currentItem) {
       newItem = this.getRandomElement(array);

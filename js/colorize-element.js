@@ -1,12 +1,31 @@
 'use strict';
 
 window.colorizeElement = function (element, colors, property) {
-  element.addEventListener('click', function (event) {
-    var currentColor = element.style[property] ?
-      window.colorsConverter.rgbToHex('rgb(101, 137, 164)') :
-      colors[0];
-    var randomColor = window.utils.getRandomElementExcept(colors, currentColor);
-    element.style[property] = randomColor;
-    element.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, randomColor);
-  });
+  /** @type {string} */
+  var currentColor = colors[0];
+
+  /** @const {number} */
+  var ENTER_KEY_CODE = 13;
+
+  /** @const {string} */
+  var ARIA_CURRENT_VALUE_ATTRIBUTE = 'aria-valuenow';
+
+  element.addEventListener('click', elementClickHandler);
+  element.addEventListener('keydown', elementKeydownEnterHandler);
+
+  function elementClickHandler(event) {
+    setRandomColor();
+  }
+
+  function elementKeydownEnterHandler(event) {
+    if (event.keyCode === ENTER_KEY_CODE) {
+      setRandomColor();
+    }
+  }
+
+  function setRandomColor() {
+    currentColor = window.utils.getRandomElementExcept(colors, currentColor);
+    element.style[property] = currentColor;
+    element.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, currentColor);
+  }
 };

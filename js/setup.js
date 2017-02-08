@@ -37,7 +37,7 @@ var CSS_CLASS_INVISIBLE = 'invisible';
 var USER_NAME_MAXLENGTH = 50;
 
 /** @const {string} */
-var ARIA_CURRENT_VALUE_ATTRIBUTE = 'aria-valuenow';
+var ARIA_HIDDEN_ATTRIBUTE = 'aria-hidden';
 
 /** @const {string} */
 var ARIA_PRESSED_ATTRIBUTE = 'aria-pressed';
@@ -78,7 +78,7 @@ var setupOpenBtnClickHandler = function (event) {
   open();
 };
 
-var setupOpenBtnKeydownHandler = function (event) {
+var setupOpenBtnKeydownEnterHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     open();
   }
@@ -88,68 +88,48 @@ var setupCloseBtnClickHandler = function (event) {
   close();
 };
 
-var setupCloseBtnKeydownHandler = function (event) {
+var setupCloseBtnKeydownEnterHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     close();
   }
 };
 
-var setupSubmitBtnKeydownHandler = function (event) {
+var setupSubmitBtnKeydownEnterHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     event.preventDefault();
     close();
   }
 };
 
-var documentKeydownHandler = function (event) {
+var documentKeydownEscHandler = function (event) {
   if (event.keyCode === ESCAPE_KEY_CODE) {
     close();
   }
 };
 
-// var wizardCoatClickHandler = function (event) {
-//   paintElementWithRandomColor(event.currentTarget, colors.WIZARD_COAT, 'fill');
-// };
-//
-// var wizardEyesClickHandler = function (event) {
-//   paintElementWithRandomColor(event.currentTarget, colors.WIZARD_EYES, 'fill');
-// };
-//
-// var fireballClickHandler = function (event) {
-//   paintElementWithRandomColor(event.currentTarget, colors.FIREBALL, 'background');
-// };
-
 setupOpenBtn.addEventListener('click', setupOpenBtnClickHandler);
-setupOpenBtn.addEventListener('keydown', setupOpenBtnKeydownHandler);
+setupOpenBtn.addEventListener('keydown', setupOpenBtnKeydownEnterHandler);
 
 /** Открытие окна настроек мага — переключение состояния и навешивание слушателей событий */
 function open() {
   toggleState(true);
 
   setupCloseBtn.addEventListener('click', setupCloseBtnClickHandler);
-  setupCloseBtn.addEventListener('keydown', setupCloseBtnKeydownHandler);
-  document.addEventListener('keydown', documentKeydownHandler);
-  setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownHandler);
+  setupCloseBtn.addEventListener('keydown', setupCloseBtnKeydownEnterHandler);
+  document.addEventListener('keydown', documentKeydownEscHandler);
+  setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownEnterHandler);
 
   window.colorizeElement(wizardCoat, colors.WIZARD_COAT, 'fill');
   window.colorizeElement(wizardEyes, colors.WIZARD_EYES, 'fill');
   window.colorizeElement(fireball, colors.FIREBALL, 'background');
-
-  // wizardCoat.addEventListener('click', wizardCoatClickHandler);
-  // wizardEyes.addEventListener('click', wizardEyesClickHandler);
-  // fireball.addEventListener('click', fireballClickHandler);
 }
 
 /** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий */
 function close() {
-  // wizardCoat.removeEventListener('click', wizardCoatClickHandler);
-  // wizardEyes.removeEventListener('click', wizardEyesClickHandler);
-  // fireball.removeEventListener('click', fireballClickHandler);
-
   setupCloseBtn.removeEventListener('click', setupCloseBtnClickHandler);
-  setupCloseBtn.removeEventListener('keydown', setupCloseBtnKeydownHandler);
-  document.removeEventListener('keydown', documentKeydownHandler);
-  setupSubmitBtn.removeEventListener('keydown', setupSubmitBtnKeydownHandler);
+  setupCloseBtn.removeEventListener('keydown', setupCloseBtnKeydownEnterHandler);
+  document.removeEventListener('keydown', documentKeydownEscHandler);
+  setupSubmitBtn.removeEventListener('keydown', setupSubmitBtnKeydownEnterHandler);
 
   toggleState(false);
 }
@@ -166,25 +146,6 @@ function toggleState(isOpened) {
   }
   setupUserName.required = isOpened;
   setupUserName.maxLength = isOpened ? USER_NAME_MAXLENGTH : false;
-  setupOpenBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, isOpened.toString());
-  setupCloseBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, (!isOpened).toString());
+  setupOpenBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, (isOpened).toString());
+  setupCloseBtn.setAttribute(ARIA_HIDDEN_ATTRIBUTE, (!isOpened).toString());
 }
-
-// /**
-//  * @param {HTMLElement} element
-//  * @param {Array.<string>} colorArray
-//  * @param {string} paintMethod
-//  */
-// function paintElementWithRandomColor(element, colorArray, paintMethod) {
-//   var randomColor = getRandomElement(colorArray);
-//   element.style[paintMethod] = randomColor;
-//   element.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, randomColor);
-// }
-//
-// /**
-//  * @param {Array.<string>} array
-//  * @return {string} случайный элемент из массива
-//  */
-// function getRandomElement(array) {
-//   return array[Math.floor(Math.random() * array.length)];
-// }
