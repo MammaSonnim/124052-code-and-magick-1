@@ -107,17 +107,17 @@ var documentKeydownHandler = function (event) {
   }
 };
 
-var wizardCoatClickHandler = function (event) {
-  paintElementWithRandomColor(event.currentTarget, colors.WIZARD_COAT, 'fill');
-};
-
-var wizardEyesClickHandler = function (event) {
-  paintElementWithRandomColor(event.currentTarget, colors.WIZARD_EYES, 'fill');
-};
-
-var fireballClickHandler = function (event) {
-  paintElementWithRandomColor(event.currentTarget, colors.FIREBALL, 'background');
-};
+// var wizardCoatClickHandler = function (event) {
+//   paintElementWithRandomColor(event.currentTarget, colors.WIZARD_COAT, 'fill');
+// };
+//
+// var wizardEyesClickHandler = function (event) {
+//   paintElementWithRandomColor(event.currentTarget, colors.WIZARD_EYES, 'fill');
+// };
+//
+// var fireballClickHandler = function (event) {
+//   paintElementWithRandomColor(event.currentTarget, colors.FIREBALL, 'background');
+// };
 
 setupOpenBtn.addEventListener('click', setupOpenBtnClickHandler);
 setupOpenBtn.addEventListener('keydown', setupOpenBtnKeydownHandler);
@@ -131,16 +131,20 @@ function open() {
   document.addEventListener('keydown', documentKeydownHandler);
   setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownHandler);
 
-  wizardCoat.addEventListener('click', wizardCoatClickHandler);
-  wizardEyes.addEventListener('click', wizardEyesClickHandler);
-  fireball.addEventListener('click', fireballClickHandler);
+  window.colorizeElement(wizardCoat, colors.WIZARD_COAT, 'fill');
+  window.colorizeElement(wizardEyes, colors.WIZARD_EYES, 'fill');
+  window.colorizeElement(fireball, colors.FIREBALL, 'background');
+
+  // wizardCoat.addEventListener('click', wizardCoatClickHandler);
+  // wizardEyes.addEventListener('click', wizardEyesClickHandler);
+  // fireball.addEventListener('click', fireballClickHandler);
 }
 
 /** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий */
 function close() {
-  wizardCoat.removeEventListener('click', wizardCoatClickHandler);
-  wizardEyes.removeEventListener('click', wizardEyesClickHandler);
-  fireball.removeEventListener('click', fireballClickHandler);
+  // wizardCoat.removeEventListener('click', wizardCoatClickHandler);
+  // wizardEyes.removeEventListener('click', wizardEyesClickHandler);
+  // fireball.removeEventListener('click', fireballClickHandler);
 
   setupCloseBtn.removeEventListener('click', setupCloseBtnClickHandler);
   setupCloseBtn.removeEventListener('keydown', setupCloseBtnKeydownHandler);
@@ -166,21 +170,21 @@ function toggleState(isOpened) {
   setupCloseBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, (!isOpened).toString());
 }
 
-/**
- * @param {HTMLElement} element
- * @param {Array.<string>} colorArray
- * @param {string} paintMethod
- */
-function paintElementWithRandomColor(element, colorArray, paintMethod) {
-  var randomColor = getRandomElement(colorArray);
-  element.style[paintMethod] = randomColor;
-  element.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, randomColor);
-}
-
-/**
- * @param {Array.<string>} array
- * @return {string} случайный элемент из массива
- */
-function getRandomElement(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
+// /**
+//  * @param {HTMLElement} element
+//  * @param {Array.<string>} colorArray
+//  * @param {string} paintMethod
+//  */
+// function paintElementWithRandomColor(element, colorArray, paintMethod) {
+//   var randomColor = getRandomElement(colorArray);
+//   element.style[paintMethod] = randomColor;
+//   element.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, randomColor);
+// }
+//
+// /**
+//  * @param {Array.<string>} array
+//  * @return {string} случайный элемент из массива
+//  */
+// function getRandomElement(array) {
+//   return array[Math.floor(Math.random() * array.length)];
+// }
