@@ -19,7 +19,7 @@ window.utils = {
     var newArray = [];
 
     for (var i = 0; i < array.length; i++) {
-      if (array[i] != item) {
+      if (array[i] !== item) {
         newArray.push(array[i]);
       }
     }
