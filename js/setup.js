@@ -145,11 +145,7 @@ function close() {
  * @param {boolean} isOpened
  */
 function toggleState(isOpened) {
-  if (isOpened) {
-    setup.classList.remove(CSS_CLASS_INVISIBLE);
-  } else {
-    setup.classList.add(CSS_CLASS_INVISIBLE);
-  }
+  setup.classList.toggle(CSS_CLASS_INVISIBLE, !isOpened);
   setupUserName.required = isOpened;
   setupUserName.maxLength = isOpened ? USER_NAME_MAXLENGTH : false;
   setupOpenBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, (isOpened).toString());
