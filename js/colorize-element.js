@@ -20,19 +20,19 @@ window.colorizeElement = function (element, colors, property) {
 
   /** @param {MouseEvent} event */
   function elementClickHandler(event) {
-    setRandomColor(element);
+    setRandomColor(event.currentTarget);
   }
 
   /** @param {KeyboardEvent} event */
   function elementKeydownHandler(event) {
     if (event.keyCode === ENTER_KEY_CODE) {
-      setRandomColor(element);
+      setRandomColor(event.currentTarget);
     }
   }
 
-  function setRandomColor(elem) {
+  function setRandomColor(target) {
     currentColor = window.utils.getRandomElementExcept(colors, currentColor);
-    elem.style[property] = currentColor;
-    elem.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, currentColor);
+    target.style[property] = currentColor;
+    target.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, currentColor);
   }
 };

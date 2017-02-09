@@ -10,21 +10,20 @@ window.utils = {
   },
 
   /**
-   * @param {Array<string>} array – пример [1, 2, 3]
-   * @param {string} item – элемент массива, пример 1
+   * @param {Array<string>} array
+   * @param {string} item
    * @return {string} newItem случайный неповторяющийся подряд элемент из массива
    */
   getRandomElementExcept: function (array, item) {
-    /** @type {number} */
-    var currentIndex = array.indexOf(item);  // 0
+    /** @type {Array<string>} */
+    var newArray = [];
 
-    array.splice(currentIndex, 1); // [2, 3]
+    for (var i = 0; i < array.length; i++) {
+      if (array[i] != item) {
+        newArray.push(array[i]);
+      }
+    }
 
-    /** @type {string} */
-    var newItem = this.getRandomElement(array); // 2
-
-    array.push(item); // [2, 3, 1]
-
-    return newItem;
+    return this.getRandomElement(newArray);
   }
 };
