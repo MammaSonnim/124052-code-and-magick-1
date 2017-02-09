@@ -74,50 +74,56 @@ var colors = {
   ]
 };
 
+/** @param {MouseEvent} event */
 var setupOpenBtnClickHandler = function (event) {
   open();
 };
 
-var setupOpenBtnKeydownEnterHandler = function (event) {
+/** @param {KeyboardEvent} event */
+var setupOpenBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     open();
   }
 };
 
+/** @param {MouseEvent} event */
 var setupCloseBtnClickHandler = function (event) {
   close();
 };
 
-var setupCloseBtnKeydownEnterHandler = function (event) {
+/** @param {KeyboardEvent} event */
+var setupCloseBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     close();
   }
 };
 
-var setupSubmitBtnKeydownEnterHandler = function (event) {
+/** @param {KeyboardEvent} event */
+var setupSubmitBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     event.preventDefault();
     close();
   }
 };
 
-var documentKeydownEscHandler = function (event) {
+/** @param {KeyboardEvent} event */
+var documentKeydownHandler = function (event) {
   if (event.keyCode === ESCAPE_KEY_CODE) {
     close();
   }
 };
 
 setupOpenBtn.addEventListener('click', setupOpenBtnClickHandler);
-setupOpenBtn.addEventListener('keydown', setupOpenBtnKeydownEnterHandler);
+setupOpenBtn.addEventListener('keydown', setupOpenBtnKeydownHandler);
 
 /** Открытие окна настроек мага — переключение состояния и навешивание слушателей событий */
 function open() {
   toggleState(true);
 
   setupCloseBtn.addEventListener('click', setupCloseBtnClickHandler);
-  setupCloseBtn.addEventListener('keydown', setupCloseBtnKeydownEnterHandler);
-  document.addEventListener('keydown', documentKeydownEscHandler);
-  setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownEnterHandler);
+  setupCloseBtn.addEventListener('keydown', setupCloseBtnKeydownHandler);
+  document.addEventListener('keydown', documentKeydownHandler);
+  setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownHandler);
 
   window.colorizeElement(wizardCoat, colors.WIZARD_COAT, 'fill');
   window.colorizeElement(wizardEyes, colors.WIZARD_EYES, 'fill');
@@ -127,9 +133,9 @@ function open() {
 /** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий */
 function close() {
   setupCloseBtn.removeEventListener('click', setupCloseBtnClickHandler);
-  setupCloseBtn.removeEventListener('keydown', setupCloseBtnKeydownEnterHandler);
-  document.removeEventListener('keydown', documentKeydownEscHandler);
-  setupSubmitBtn.removeEventListener('keydown', setupSubmitBtnKeydownEnterHandler);
+  setupCloseBtn.removeEventListener('keydown', setupCloseBtnKeydownHandler);
+  document.removeEventListener('keydown', documentKeydownHandler);
+  setupSubmitBtn.removeEventListener('keydown', setupSubmitBtnKeydownHandler);
 
   toggleState(false);
 }

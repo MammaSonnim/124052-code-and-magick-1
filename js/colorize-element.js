@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * @param {HTMLElement} element
+ * @param {Array<string>} colors
+ * @param {string} property CSS-свойство для применения цвета
+ */
 window.colorizeElement = function (element, colors, property) {
   /** @type {string} */
   var currentColor = colors[0];
@@ -11,21 +16,23 @@ window.colorizeElement = function (element, colors, property) {
   var ARIA_CURRENT_VALUE_ATTRIBUTE = 'aria-valuenow';
 
   element.addEventListener('click', elementClickHandler);
-  element.addEventListener('keydown', elementKeydownEnterHandler);
+  element.addEventListener('keydown', elementKeydownHandler);
 
+  /** @param {MouseEvent} event */
   function elementClickHandler(event) {
-    setRandomColor();
+    setRandomColor(element);
   }
 
-  function elementKeydownEnterHandler(event) {
+  /** @param {KeyboardEvent} event */
+  function elementKeydownHandler(event) {
     if (event.keyCode === ENTER_KEY_CODE) {
-      setRandomColor();
+      setRandomColor(element);
     }
   }
 
-  function setRandomColor() {
+  function setRandomColor(elem) {
     currentColor = window.utils.getRandomElementExcept(colors, currentColor);
-    element.style[property] = currentColor;
-    element.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, currentColor);
+    elem.style[property] = currentColor;
+    elem.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, currentColor);
   }
 };
