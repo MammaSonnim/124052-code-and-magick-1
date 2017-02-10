@@ -37,7 +37,7 @@ var CSS_CLASS_INVISIBLE = 'invisible';
 var USER_NAME_MAXLENGTH = 50;
 
 /** @const {string} */
-var ARIA_CURRENT_VALUE_ATTRIBUTE = 'aria-valuenow';
+var ARIA_HIDDEN_ATTRIBUTE = 'aria-hidden';
 
 /** @const {string} */
 var ARIA_PRESSED_ATTRIBUTE = 'aria-pressed';
@@ -74,26 +74,31 @@ var colors = {
   ]
 };
 
+/** @param {MouseEvent} event */
 var setupOpenBtnClickHandler = function (event) {
   open();
 };
 
+/** @param {KeyboardEvent} event */
 var setupOpenBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     open();
   }
 };
 
+/** @param {MouseEvent} event */
 var setupCloseBtnClickHandler = function (event) {
   close();
 };
 
+/** @param {KeyboardEvent} event */
 var setupCloseBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     close();
   }
 };
 
+/** @param {KeyboardEvent} event */
 var setupSubmitBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
     event.preventDefault();
@@ -101,22 +106,11 @@ var setupSubmitBtnKeydownHandler = function (event) {
   }
 };
 
+/** @param {KeyboardEvent} event */
 var documentKeydownHandler = function (event) {
   if (event.keyCode === ESCAPE_KEY_CODE) {
     close();
   }
-};
-
-var wizardCoatClickHandler = function (event) {
-  paintElementWithRandomColor(event.currentTarget, colors.WIZARD_COAT, 'fill');
-};
-
-var wizardEyesClickHandler = function (event) {
-  paintElementWithRandomColor(event.currentTarget, colors.WIZARD_EYES, 'fill');
-};
-
-var fireballClickHandler = function (event) {
-  paintElementWithRandomColor(event.currentTarget, colors.FIREBALL, 'background');
 };
 
 setupOpenBtn.addEventListener('click', setupOpenBtnClickHandler);
@@ -131,17 +125,13 @@ function open() {
   document.addEventListener('keydown', documentKeydownHandler);
   setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownHandler);
 
-  wizardCoat.addEventListener('click', wizardCoatClickHandler);
-  wizardEyes.addEventListener('click', wizardEyesClickHandler);
-  fireball.addEventListener('click', fireballClickHandler);
+  window.colorizeElement(wizardCoat, colors.WIZARD_COAT, 'fill');
+  window.colorizeElement(wizardEyes, colors.WIZARD_EYES, 'fill');
+  window.colorizeElement(fireball, colors.FIREBALL, 'background');
 }
 
 /** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий */
 function close() {
-  wizardCoat.removeEventListener('click', wizardCoatClickHandler);
-  wizardEyes.removeEventListener('click', wizardEyesClickHandler);
-  fireball.removeEventListener('click', fireballClickHandler);
-
   setupCloseBtn.removeEventListener('click', setupCloseBtnClickHandler);
   setupCloseBtn.removeEventListener('keydown', setupCloseBtnKeydownHandler);
   document.removeEventListener('keydown', documentKeydownHandler);
@@ -155,32 +145,9 @@ function close() {
  * @param {boolean} isOpened
  */
 function toggleState(isOpened) {
-  if (isOpened) {
-    setup.classList.remove(CSS_CLASS_INVISIBLE);
-  } else {
-    setup.classList.add(CSS_CLASS_INVISIBLE);
-  }
+  setup.classList.toggle(CSS_CLASS_INVISIBLE, !isOpened);
   setupUserName.required = isOpened;
   setupUserName.maxLength = isOpened ? USER_NAME_MAXLENGTH : false;
-  setupOpenBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, isOpened.toString());
-  setupCloseBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, (!isOpened).toString());
-}
-
-/**
- * @param {HTMLElement} element
- * @param {Array.<string>} colorArray
- * @param {string} paintMethod
- */
-function paintElementWithRandomColor(element, colorArray, paintMethod) {
-  var randomColor = getRandomElement(colorArray);
-  element.style[paintMethod] = randomColor;
-  element.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, randomColor);
-}
-
-/**
- * @param {Array.<string>} array
- * @return {string} случайный элемент из массива
- */
-function getRandomElement(array) {
-  return array[Math.floor(Math.random() * array.length)];
+  setupOpenBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, (isOpened).toString());
+  setupCloseBtn.setAttribute(ARIA_HIDDEN_ATTRIBUTE, (!isOpened).toString());
 }
