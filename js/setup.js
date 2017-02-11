@@ -125,9 +125,9 @@ function open() {
   document.addEventListener('keydown', documentKeydownHandler);
   setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownHandler);
 
-  window.colorizeElement(wizardCoat, colors.WIZARD_COAT, 'fill');
-  window.colorizeElement(wizardEyes, colors.WIZARD_EYES, 'fill');
-  window.colorizeElement(fireball, colors.FIREBALL, 'background');
+  window.colorize.colorizeElement(wizardCoat, colors.WIZARD_COAT, 'fill');
+  window.colorize.colorizeElement(wizardEyes, colors.WIZARD_EYES, 'fill');
+  window.colorize.colorizeElement(fireball, colors.FIREBALL, 'background');
 }
 
 /** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий */
