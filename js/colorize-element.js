@@ -1,18 +1,15 @@
 'use strict';
 
-window.colorize = (function () {
+window.colorizeElement = (function () {
   /** @const {number} */
   var ENTER_KEY_CODE = 13;
-
-  /** @const {string} */
-  var ARIA_CURRENT_VALUE_ATTRIBUTE = 'aria-valuenow';
 
   /**
    * @param {HTMLElement} element
    * @param {Array<string>} colors
    * @param {string} property CSS-свойство для применения цвета
    */
-  var colorizeElement = function (element, colors, property) {
+  return function (element, colors, property) {
     /** @type {string} */
     var currentColor = colors[0];
 
@@ -34,11 +31,7 @@ window.colorize = (function () {
     function setRandomColor(target) {
       currentColor = window.utils.getRandomElementExcept(colors, currentColor);
       target.style[property] = currentColor;
-      target.setAttribute(ARIA_CURRENT_VALUE_ATTRIBUTE, currentColor);
+      target.setAttribute('aria-valuenow', currentColor);
     }
-  };
-
-  return {
-    colorizeElement: colorizeElement
   };
 })();

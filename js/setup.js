@@ -30,17 +30,8 @@ var wizardEyes = wizard.querySelector('#wizard-eyes');
 /** @type {HTMLElement} */
 var fireball = setupForm.querySelector('.setup-fireball-wrap');
 
-/** @const {string} */
-var CSS_CLASS_INVISIBLE = 'invisible';
-
 /** @const {number} */
 var USER_NAME_MAXLENGTH = 50;
-
-/** @const {string} */
-var ARIA_HIDDEN_ATTRIBUTE = 'aria-hidden';
-
-/** @const {string} */
-var ARIA_PRESSED_ATTRIBUTE = 'aria-pressed';
 
 /** @const {number} */
 var ENTER_KEY_CODE = 13;
@@ -125,9 +116,9 @@ function open() {
   document.addEventListener('keydown', documentKeydownHandler);
   setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownHandler);
 
-  window.colorize.colorizeElement(wizardCoat, colors.WIZARD_COAT, 'fill');
-  window.colorize.colorizeElement(wizardEyes, colors.WIZARD_EYES, 'fill');
-  window.colorize.colorizeElement(fireball, colors.FIREBALL, 'background');
+  window.colorizeElement(wizardCoat, colors.WIZARD_COAT, 'fill');
+  window.colorizeElement(wizardEyes, colors.WIZARD_EYES, 'fill');
+  window.colorizeElement(fireball, colors.FIREBALL, 'background');
 }
 
 /** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий */
@@ -145,9 +136,9 @@ function close() {
  * @param {boolean} isOpened
  */
 function toggleState(isOpened) {
-  setup.classList.toggle(CSS_CLASS_INVISIBLE, !isOpened);
+  setup.classList.toggle('invisible', !isOpened);
   setupUserName.required = isOpened;
   setupUserName.maxLength = isOpened ? USER_NAME_MAXLENGTH : false;
-  setupOpenBtn.setAttribute(ARIA_PRESSED_ATTRIBUTE, (isOpened).toString());
-  setupCloseBtn.setAttribute(ARIA_HIDDEN_ATTRIBUTE, (!isOpened).toString());
+  setupOpenBtn.setAttribute('aria-pressed', (isOpened).toString());
+  setupCloseBtn.setAttribute('aria-hidden', (!isOpened).toString());
 }
