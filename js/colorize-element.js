@@ -28,6 +28,7 @@ window.colorizeElement = (function () {
       }
     }
 
+    /** @param {HTMLElement} target */
     function setRandomColor(target) {
       currentColor = window.utils.getRandomElementExcept(colors, currentColor);
       target.style[property] = currentColor;
