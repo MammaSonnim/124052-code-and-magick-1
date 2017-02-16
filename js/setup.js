@@ -122,9 +122,9 @@ function open(cb) {
   document.addEventListener('keydown', documentKeydownHandler);
   setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownHandler);
 
-  window.colorizeElement(wizardCoat, colors.WIZARD_COAT, 'fill');
-  window.colorizeElement(wizardEyes, colors.WIZARD_EYES, 'fill');
-  window.colorizeElement(fireball, colors.FIREBALL, 'background');
+  window.colorizeElement(wizardCoat, colors.WIZARD_COAT, colorFill);
+  window.colorizeElement(wizardEyes, colors.WIZARD_EYES, colorFill);
+  window.colorizeElement(fireball, colors.FIREBALL, colorBg);
 
   onSetupClose = cb;
 }
@@ -155,7 +155,24 @@ function toggleState(isOpened) {
   setupCloseBtn.setAttribute('aria-hidden', (!isOpened).toString());
 }
 
-/** Коллбек, ставит фокус на кнопку закрытия */
+/** CALLBACKS */
+/**
+ * @param {HTMLElement} target
+ * @param {string} currentColor
+ */
+var colorFill = function (target, currentColor) {
+  target.style.fill = currentColor;
+};
+
+/**
+ * @param {HTMLElement} target
+ * @param {string} currentColor
+ */
+var colorBg = function (target, currentColor) {
+  target.style.background = currentColor;
+};
+
+/** Ставит фокус на кнопку закрытия */
 var focusSetupOpenBtn = function () {
   setupOpenBtn.focus();
 };
