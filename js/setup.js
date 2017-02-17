@@ -39,7 +39,7 @@ var ENTER_KEY_CODE = 13;
 /** @const {number} */
 var ESCAPE_KEY_CODE = 27;
 
-/** @type {?Function} cb */
+/** @type {?Function} callback */
 var onSetupClose = null;
 
 /** Словарь всех цветов. */
@@ -112,9 +112,9 @@ setupOpenBtn.addEventListener('keydown', setupOpenBtnKeydownHandler);
 
 /**
  * Открытие окна настроек мага — переключение состояния и навешивание слушателей событий
- * @param {?Function} cb
+ * @param {?Function} callback
  */
-function open(cb) {
+function open(callback) {
   toggleState(true);
 
   setupCloseBtn.addEventListener('click', setupCloseBtnClickHandler);
@@ -122,11 +122,13 @@ function open(cb) {
   document.addEventListener('keydown', documentKeydownHandler);
   setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownHandler);
 
-  window.colorizeElement(wizardCoat, colors.WIZARD_COAT, colorFill);
-  window.colorizeElement(wizardEyes, colors.WIZARD_EYES, colorFill);
-  window.colorizeElement(fireball, colors.FIREBALL, colorBg);
+  window.colorizeElement(wizardCoat, colors.WIZARD_COAT);
+  window.colorizeElement(wizardEyes, colors.WIZARD_EYES);
+  window.colorizeElement(fireball, colors.FIREBALL, function (target, currentColor) {
+    target.style.background = currentColor;
+  });
 
-  onSetupClose = cb;
+  onSetupClose = callback;
 }
 
 /** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий */
@@ -154,23 +156,6 @@ function toggleState(isOpened) {
   setupOpenBtn.setAttribute('aria-pressed', (isOpened).toString());
   setupCloseBtn.setAttribute('aria-hidden', (!isOpened).toString());
 }
-
-/** CALLBACKS */
-/**
- * @param {HTMLElement} target
- * @param {string} currentColor
- */
-var colorFill = function (target, currentColor) {
-  target.style.fill = currentColor;
-};
-
-/**
- * @param {HTMLElement} target
- * @param {string} currentColor
- */
-var colorBg = function (target, currentColor) {
-  target.style.background = currentColor;
-};
 
 /** Ставит фокус на кнопку закрытия */
 var focusSetupOpenBtn = function () {
