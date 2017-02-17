@@ -7,9 +7,9 @@ window.colorizeElement = (function () {
   /**
    * @param {HTMLElement} element
    * @param {Array<string>} colors
-   * @param {string} property CSS-свойство для применения цвета
+   * @param {Function=} optCallback с логикой покраски
    */
-  return function (element, colors, property) {
+  return function (element, colors, optCallback) {
     /** @type {string} */
     var currentColor = colors[0];
 
@@ -18,20 +18,29 @@ window.colorizeElement = (function () {
 
     /** @param {MouseEvent} event */
     function elementClickHandler(event) {
-      setRandomColor(event.currentTarget);
+      setRandomColor(event.currentTarget, optCallback);
     }
 
     /** @param {KeyboardEvent} event */
     function elementKeydownHandler(event) {
       if (event.keyCode === ENTER_KEY_CODE) {
-        setRandomColor(event.currentTarget);
+        setRandomColor(event.currentTarget, optCallback);
       }
     }
 
-    function setRandomColor(target) {
+    /**
+     * @param {HTMLElement} target
+     * @param {Function=} optDrawMethod callback с логикой покраски
+     */
+    function setRandomColor(target, optDrawMethod) {
       currentColor = window.utils.getRandomElementExcept(colors, currentColor);
-      target.style[property] = currentColor;
       target.setAttribute('aria-valuenow', currentColor);
+
+      if (typeof optDrawMethod === 'function') {
+        optDrawMethod(target, currentColor);
+      } else {
+        target.style.fill = currentColor;
+      }
     }
   };
 })();

@@ -4,7 +4,7 @@
 var setup = document.querySelector('.setup');
 
 /** @type {HTMLElement} */
-var setupOpenBtn = document.querySelector('.setup-open');
+var setupOpenBtn = document.querySelector('.setup-open-icon');
 
 /** @type {HTMLElement} */
 var setupForm = document.querySelector('.setup-wizard-form');
@@ -38,6 +38,9 @@ var ENTER_KEY_CODE = 13;
 
 /** @const {number} */
 var ESCAPE_KEY_CODE = 27;
+
+/** @type {?Function} callback */
+var onSetupClose = null;
 
 /** Словарь всех цветов. */
 var colors = {
@@ -73,7 +76,7 @@ var setupOpenBtnClickHandler = function (event) {
 /** @param {KeyboardEvent} event */
 var setupOpenBtnKeydownHandler = function (event) {
   if (event.keyCode === ENTER_KEY_CODE) {
-    open();
+    open(focusSetupOpenBtn);
   }
 };
 
@@ -107,8 +110,11 @@ var documentKeydownHandler = function (event) {
 setupOpenBtn.addEventListener('click', setupOpenBtnClickHandler);
 setupOpenBtn.addEventListener('keydown', setupOpenBtnKeydownHandler);
 
-/** Открытие окна настроек мага — переключение состояния и навешивание слушателей событий */
-function open() {
+/**
+ * Открытие окна настроек мага — переключение состояния и навешивание слушателей событий
+ * @param {?Function} callback
+ */
+function open(callback) {
   toggleState(true);
 
   setupCloseBtn.addEventListener('click', setupCloseBtnClickHandler);
@@ -116,9 +122,13 @@ function open() {
   document.addEventListener('keydown', documentKeydownHandler);
   setupSubmitBtn.addEventListener('keydown', setupSubmitBtnKeydownHandler);
 
-  window.colorizeElement(wizardCoat, colors.WIZARD_COAT, 'fill');
-  window.colorizeElement(wizardEyes, colors.WIZARD_EYES, 'fill');
-  window.colorizeElement(fireball, colors.FIREBALL, 'background');
+  window.colorizeElement(wizardCoat, colors.WIZARD_COAT);
+  window.colorizeElement(wizardEyes, colors.WIZARD_EYES);
+  window.colorizeElement(fireball, colors.FIREBALL, function (target, currentColor) {
+    target.style.background = currentColor;
+  });
+
+  onSetupClose = callback;
 }
 
 /** Закрытие окна настроек мага — переключение состояния и снятие слушателей событий */
@@ -129,6 +139,10 @@ function close() {
   setupSubmitBtn.removeEventListener('keydown', setupSubmitBtnKeydownHandler);
 
   toggleState(false);
+
+  if (typeof onSetupClose === 'function') {
+    onSetupClose();
+  }
 }
 
 /**
@@ -142,3 +156,8 @@ function toggleState(isOpened) {
   setupOpenBtn.setAttribute('aria-pressed', (isOpened).toString());
   setupCloseBtn.setAttribute('aria-hidden', (!isOpened).toString());
 }
+
+/** Ставит фокус на кнопку закрытия */
+var focusSetupOpenBtn = function () {
+  setupOpenBtn.focus();
+};
