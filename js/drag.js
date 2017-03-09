@@ -13,7 +13,7 @@
   /** @type {boolean} */
   var isDragging = false;
 
-    /** @param {MouseEvent} event */
+  /** @param {MouseEvent} event */
   var setupUserPicMousedownHandler = function (event) {
     onMouseDown(event);
   };
@@ -71,7 +71,7 @@
     startPoint = {
       x: event.clientX,
       y: event.clientY
-    }
+    };
   }
 
   /** Снимаются обработчики на движение и отпускание клавиши мыши */
