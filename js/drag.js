@@ -15,17 +15,19 @@
 
   /** @param {MouseEvent} event */
   var setupUserPicMousedownHandler = function (event) {
-    onMouseDown(event);
+    event.preventDefault();
+    addEventListeners(event);
   };
 
   /** @param {MouseEvent} event */
   var documentMousemoveHandler = function (event) {
-    onMouseMove(event, setup);
+    event.preventDefault();
+    setPosition(event, setup);
   };
 
   /** @param {MouseEvent} event */
   var documentMouseupHandler = function (event) {
-    onMouseUp();
+    removeEventListeners();
   };
 
   setupUserPic.addEventListener('mousedown', setupUserPicMousedownHandler);
@@ -34,11 +36,9 @@
    * Навешиваются обработчики на движение и отпускание клавиши мыши
    * @param {MouseEvent} event
    */
-  function onMouseDown(event) {
-    event.preventDefault();
-
+  function addEventListeners(event) {
     if (isDragging) {
-      onMouseUp();
+      removeEventListeners();
     }
 
     isDragging = true;
@@ -57,9 +57,7 @@
    * @param {MouseEvent} event
    * @param {HTMLElement} target
    */
-  function onMouseMove(event, target) {
-    event.preventDefault();
-
+  function setPosition(event, target) {
     var shift = {
       x: startPoint.x - event.clientX,
       y: startPoint.y - event.clientY
@@ -75,7 +73,7 @@
   }
 
   /** Снимаются обработчики на движение и отпускание клавиши мыши */
-  function onMouseUp() {
+  function removeEventListeners() {
     document.removeEventListener('mousemove', documentMousemoveHandler);
     document.removeEventListener('mouseup', documentMouseupHandler);
 
